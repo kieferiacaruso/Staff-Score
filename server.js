@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -6,10 +8,12 @@ const authRoutes = require('./routes/auth');
 const reviewRoutes = require('./routes/review');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;  // Use Heroku's dynamic port or fallback to 3000
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/staff-score', { useNewUrlParser: true, useUnifiedTopology: true })
+// Connect to MongoDB Atlas
+const dbURI = process.env.MONGO_URI || 'mongodb+srv://kieferiacaruso:x5i0QTvLCcP8gPD2@staff-score.srvie.mongodb.net/?retryWrites=true&w=majority&appName=staff-score';
+
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
 
@@ -26,4 +30,3 @@ app.use('/api/reviews', reviewRoutes);
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
