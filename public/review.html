@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write a Review</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Logo" class="logo" onclick="window.location.href='index.html'">
+        <div class="header-center">
+            <button>Write a Review</button>
+        </div>
+        <div class="header-right">
+            <button onclick="window.location.href='login.html'">Log In</button>
+            <button onclick="window.location.href='signup.html'">Sign Up</button>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Write a Review</h1>
+        <form id="review-form">
+            <!-- Score Selector -->
+            <label for="overall-score">Overall Rating</label>
+            <div class="star-rating" id="overall-score">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+
+            <!-- First Name -->
+            <label for="first-name">Employee First Name</label>
+            <input type="text" id="first-name" placeholder="Enter First Name" required>
+
+            <!-- Last Name -->
+            <label for="last-name">Employee Last Name</label>
+            <input type="text" id="last-name" placeholder="Enter Last Name" required>
+
+
+            <!-- Company Worked For -->
+            <label for="company">Company Worked For</label>
+            <input type="text" id="company" placeholder="Enter Company Name">
+
+            <!-- Employer Position -->
+            <label for="position">Employer Position</label>
+            <input type="text" id="position" placeholder="Enter Position">
+
+            <!-- Reason for Rating -->
+            <label for="reason">Reason for Rating</label>
+            <textarea id="reason" placeholder="Describe your reason for the rating"></textarea>
+
+            <!-- Tags (Skills) -->
+            <label for="tags">Rate Skills</label>
+            <div id="tags-container">
+                <div class="tag-rating">
+                    <span>Communication</span>
+                    <div class="star-rating" id="communication-rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                </div>
+                <div class="tag-rating">
+                    <span>Teamwork</span>
+                    <div class="star-rating" id="teamwork-rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                </div>
+                <div class="tag-rating">
+                    <span>Technical Skills</span>
+                    <div class="star-rating" id="technical-skills-rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

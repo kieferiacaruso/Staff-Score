@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Logo" class="logo">
+        <div class="header-right">
+            <button onclick="window.location.href='login.html'">Log In</button>
+        </div>
+    </header>
+
+    <h1>Create an Account</h1>
+    <form id="signup-form">
+        <input type="text" id="first-name" placeholder="First Name">
+        <input type="text" id="last-name" placeholder="Last Name">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <script>
+        // Your JavaScript code for handling form submission
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName, lastName, email, password, role: 'employee' }) // You can set the role dynamically
+            });
+
+            const data = await response.json();
+            if (data.token) {
+                // Store the token and redirect
+                localStorage.setItem('token', data.token);
+                window.location.href = '/';
+            } else {
+                alert(data.error);
+            }
+        });
+    </script>
+</body>
+</html>
