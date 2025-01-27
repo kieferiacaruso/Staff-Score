@@ -1,3 +1,8 @@
+// Define the base URL for API requests
+const baseUrl = window.location.hostname === 'localhost'
+    ? 'http://localhost:3000'
+    : 'https://git.heroku.com/staff-score.git'; // Replace with your Heroku or custom domain URL
+
 // Existing form submission handler
 document.getElementById('review-form').addEventListener('submit', async function(event) {
     event.preventDefault();
@@ -32,7 +37,7 @@ document.getElementById('review-form').addEventListener('submit', async function
 
     // Send the data to the server
     try {
-        const response = await fetch('/api/reviews', {
+        const response = await fetch(`${baseUrl}/api/reviews`, { // Use baseUrl
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,15 +93,15 @@ document.querySelectorAll('.star-rating').forEach(ratingContainer => {
         });
     });
 });
+
 function searchByCompany() {
     const companyName = document.getElementById('company').value.trim();
-    console.log("this workssss");
     if (!companyName) {
         alert('Please enter a company name.');
         return;
     }
 
-    fetch(`/api/reviews/reviews/company/${companyName}`)
+    fetch(`${baseUrl}/api/reviews/reviews/company/${companyName}`) // Use baseUrl
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch reviews.');
@@ -112,7 +117,7 @@ function searchByCompany() {
 
             // Store the reviews in localStorage for results.html to access
             localStorage.setItem('reviews', JSON.stringify(data));
-            console.log("this workssss");
+
             // Redirect to results.html
             window.location.href = 'results.html';
         })
@@ -137,7 +142,7 @@ function searchByName() {
     if (lastName) queryParams.append('lastName', lastName);
     
     // Fetch matching reviews
-    fetch(`/api/reviews/reviews/name?${queryParams.toString()}`)
+    fetch(`${baseUrl}/api/reviews/reviews/name?${queryParams.toString()}`) // Use baseUrl
         .then(response => {
             if (!response.ok) throw new Error('No reviews found');
             return response.json();
@@ -160,7 +165,3 @@ function searchByName() {
             alert('No reviews found or an error occurred.');
         });
 }
-
-
-
-
