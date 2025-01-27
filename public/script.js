@@ -22,7 +22,7 @@ document.getElementById('review-form').addEventListener('submit', async function
     const technicalSkillsRating = getStarRating('technical-skills-rating');
 
     // Create the review object
-    const reviewData = {
+    const newReview = new Review({
         firstName,
         lastName,
         employeeName,
@@ -33,7 +33,7 @@ document.getElementById('review-form').addEventListener('submit', async function
         teamworkRating,
         technicalSkillsRating,
         overallRating
-    };
+    });
 
     // Send the data to the server
     try {
@@ -42,7 +42,7 @@ document.getElementById('review-form').addEventListener('submit', async function
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(reviewData),
+            body: JSON.stringify(newReview),
         });
 
         const result = await response.json();
