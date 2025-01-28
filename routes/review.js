@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
         const employeeName = `${firstName} ${lastName}`;
 
         // Create a new review document
-        const newReview = {
+        const newReview = new Review({
             firstName,
             lastName,
             employeeName,
@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
             teamworkRating,
             technicalSkillsRating,
             overallRating
-        };
+        });
 
         // Save the review to the database
         await newReview.save();
