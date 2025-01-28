@@ -1,5 +1,6 @@
 require('dotenv').config(); // Load environment variables
-
+const cors = require('cors');
+app.use(cors());
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -11,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;  // Use Heroku's dynamic port or fallback to 3000
 
 // Connect to MongoDB Atlas
-const dbURI = 'mongodb+srv://kieferiacaruso:x5i0QTvLCcP8gPD2@staff-score.srvie.mongodb.net/?retryWrites=true&w=majority&appName=staff-score';
+const dbURI = process.env.MONGODB_URI || 'mongodb+srv://kieferiacaruso:x5i0QTvLCcP8gPD2@staff-score.srvie.mongodb.net/?retryWrites=true&w=majority&appName=staff-score';
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
