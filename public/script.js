@@ -1,7 +1,7 @@
 // Define the base URL for API requests
 const baseUrl = window.location.hostname === 'localhost'
     ? 'http://localhost:3000'
-    : 'https://git.heroku.com/staff-score.git'; // Replace with your Heroku or custom domain URL
+    : 'https://staff-score-1d60849dcb26.herokuapp.com/'; // Replace with your Heroku or custom domain URL
 
 // Existing form submission handler
 document.getElementById('review-form').addEventListener('submit', async function(event) {
@@ -22,7 +22,7 @@ document.getElementById('review-form').addEventListener('submit', async function
     const technicalSkillsRating = getStarRating('technical-skills-rating');
 
     // Create the review object
-    const newReview = new Review({
+    const newReview = {
         firstName,
         lastName,
         employeeName,
@@ -33,7 +33,7 @@ document.getElementById('review-form').addEventListener('submit', async function
         teamworkRating,
         technicalSkillsRating,
         overallRating
-    });
+    };
 
     // Send the data to the server
     try {
