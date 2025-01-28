@@ -7,30 +7,108 @@ body {
     color: #333;
 }
 
+/* Improved Header Styles */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    background-color: #146490;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #146490, #0d4561);
     color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.logo {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: #fdfcfc;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+    opacity: 0.9;
+}
+
+/* Improved Container Styles */
 .container {
     max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
+    margin: 50px auto;
+    padding: 40px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: left;
+    text-align: center;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 20px;
+    color: #0d4561;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
+/* Improved Button Styles */
+button {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.header-center button {
+    background-color: #ffd700;
+    color: #0d4561;
+}
+
+.header-center button:hover {
+    background-color: #f5c518;
+    transform: translateY(-1px);
+}
+
+.header-right button {
+    background-color: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    margin-left: 15px;
+}
+
+.header-right button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.button-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.button-container button {
+    flex: 1;
+    max-width: 200px;
+    background: linear-gradient(135deg, #146490, #1a7fb4);
+    color: white;
+    padding: 18px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #1a7fb4, #146490);
+}
+
+/* Original Unmodified Styles Below */
 label {
     display: block;
     margin-top: 20px;
@@ -70,6 +148,7 @@ textarea {
 .tag-rating {
     margin-top: 15px;
 }
+
 .review {
     border: 1px solid #ddd;
     padding: 15px;
@@ -93,22 +172,36 @@ textarea {
 }
 
 .star1 {
-    color: gold; /* Filled stars should be gold */
+    color: gold;
     font-size: 20px;
 }
 
 .star-empty1 {
-    color: #ccc; /* Empty stars should be light gray */
+    color: #ccc;
 }
 
 .star-rating1 span {
     margin-right: 5px;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #fdfcfc;
-    cursor: pointer;
-    text-decoration: none;
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .header-center, .header-right {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .button-container {
+        flex-direction: column;
+    }
+    
+    .button-container button {
+        max-width: none;
+    }
 }
