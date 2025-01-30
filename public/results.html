@@ -6,17 +6,39 @@
     <title>Search Results</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Add custom styling for the score display */
+        /* Updated styling for left alignment */
+        .review {
+            text-align: left;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .review h2 {
+            margin-bottom: 10px;
+            color: #0d4561;
+            text-align: left;
+        }
+
+        .review p {
+            margin: 8px 0;
+            text-align: left;
+        }
+
         .score-display {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin: 10px 0;
+            margin: 15px 0;
         }
+
         .numeric-score {
             font-size: 1.4em;
             font-weight: bold;
             color: #0d4561;
+        }
+
+        .star-rating1 {
+            display: inline-block;
         }
     </style>
 </head>
@@ -36,7 +58,7 @@
         // Function to render stars for a given rating
         function getStars(rating) {
             let stars = '';
-            const numericRating = Math.round(parseFloat(rating)); // Handle decimal ratings
+            const numericRating = Math.round(parseFloat(rating));
             for (let i = 1; i <= 5; i++) {
                 stars += i <= numericRating 
                     ? '<span class="star1">&#9733;</span>' 
