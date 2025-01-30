@@ -20,99 +20,80 @@
     <div class="container">
         <h1>Write a Review</h1>
         <form id="review-form">
-            <label for="first-name">Employee First Name</label>
-            <input type="text" id="first-name" required>
-
-            <label for="last-name">Employee Last Name</label>
-            <input type="text" id="last-name" required>
-
-            <label for="company">Company Worked For</label>
-            <input type="text" id="company" required>
-
-            <label for="position">Employer Title</label>
-            <input type="text" id="position">
+            <div class="input-group">
+                <label for="first-name">Employee First Name</label>
+                <input type="text" id="first-name" required>
+                <label for="last-name">Employee Last Name</label>
+                <input type="text" id="last-name" required>
+            </div>
+            <div class="input-group">
+                <label for="company">Company Worked For</label>
+                <input type="text" id="company" required>
+                <label for="position">Employer Title</label>
+                <input type="text" id="position">
+            </div>
             
             <div class="survey-section">
                 <h2>Survey Questions</h2>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Reliability: How consistent does this person meet deadlines and fulfill their commitments?</label>
-                    <select required>
-                        <option value="0">Rarely Consistent</option>
-                        <option value="2.5">Somewhat Consistent</option>
-                        <option value="5">Very Consistent</option>
-                    </select>
+                    <button type="button" data-value="0">Rarely Consistent</button>
+                    <button type="button" data-value="2.5">Somewhat Consistent</button>
+                    <button type="button" data-value="5">Very Consistent</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Accountability: How does this person take responsibility for their actions and work outcomes?</label>
-                    <select required>
-                        <option value="0">Never</option>
-                        <option value="2.5">Sometimes</option>
-                        <option value="5">Always</option>
-                    </select>
+                    <button type="button" data-value="0">Never</button>
+                    <button type="button" data-value="2.5">Sometimes</button>
+                    <button type="button" data-value="5">Always</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Teamwork: How effectively does this person collaborate and communicate with team members?</label>
-                    <select required>
-                        <option value="0">Poor</option>
-                        <option value="2.5">Fair</option>
-                        <option value="5">Excellent</option>
-                    </select>
+                    <button type="button" data-value="0">Poor</button>
+                    <button type="button" data-value="2.5">Fair</button>
+                    <button type="button" data-value="5">Excellent</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Adaptability: How well does this person adjust to changes or new challenges in the workplace?</label>
-                    <select required>
-                        <option value="0">Needs Improvement</option>
-                        <option value="2.5">Somewhat Well</option>
-                        <option value="5">Very Well</option>
-                    </select>
+                    <button type="button" data-value="0">Needs Improvement</button>
+                    <button type="button" data-value="2.5">Somewhat Well</button>
+                    <button type="button" data-value="5">Very Well</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Problem-Solving Skills: How proficient is this person at identifying and solving work-related issues?</label>
-                    <select required>
-                        <option value="0">Needs Improvement</option>
-                        <option value="2.5">Moderately Proficient</option>
-                        <option value="5">Extremely Proficient</option>
-                    </select>
+                    <button type="button" data-value="0">Needs Improvement</button>
+                    <button type="button" data-value="2.5">Moderately Proficient</button>
+                    <button type="button" data-value="5">Extremely Proficient</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Work Quality: How would you rate the overall quality and thoroughness of this person's work?</label>
-                    <select required>
-                        <option value="0">Poor</option>
-                        <option value="2.5">Fair</option>
-                        <option value="5">Excellent</option>
-                    </select>
+                    <button type="button" data-value="0">Poor</button>
+                    <button type="button" data-value="2.5">Fair</button>
+                    <button type="button" data-value="5">Excellent</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Work Ethic Consistency: Does this person demonstrate a strong work ethic consistently, regardless of supervision?</label>
-                    <select required>
-                        <option value="0">Never</option>
-                        <option value="2.5">Sometimes</option>
-                        <option value="5">Always</option>
-                    </select>
+                    <button type="button" data-value="0">Never</button>
+                    <button type="button" data-value="2.5">Sometimes</button>
+                    <button type="button" data-value="5">Always</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Time Management: How well does this person prioritize and manage their time to complete tasks efficiently?</label>
-                    <select required>
-                        <option value="0">Poor</option>
-                        <option value="2.5">Fair</option>
-                        <option value="5">Excellent</option>
-                    </select>
+                    <button type="button" data-value="0">Poor</button>
+                    <button type="button" data-value="2.5">Fair</button>
+                    <button type="button" data-value="5">Excellent</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Professionalism: How well does this person uphold a professional attitude in the workplace?</label>
-                    <select required>
-                        <option value="0">Never</option>
-                        <option value="2.5">Sometimes</option>
-                        <option value="5">Always</option>
-                    </select>
+                    <button type="button" data-value="0">Never</button>
+                    <button type="button" data-value="2.5">Sometimes</button>
+                    <button type="button" data-value="5">Always</button>
                 </div>
-                <div class="survey-question">
+                <div class="survey-question" data-score="0">
                     <label>Initiative: How often does this person take initiative to go beyond their assigned tasks or responsibilities?</label>
-                    <select required>
-                        <option value="0">Never</option>
-                        <option value="2.5">Occasionally</option>
-                        <option value="5">Frequently</option>
-                    </select>
+                    <button type="button" data-value="0">Never</button>
+                    <button type="button" data-value="2.5">Occasionally</button>
+                    <button type="button" data-value="5">Frequently</button>
                 </div>
             </div>
             
