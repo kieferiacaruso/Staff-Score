@@ -20,72 +20,110 @@
     <div class="container">
         <h1>Write a Review</h1>
         <form id="review-form">
-            <!-- Score Selector -->
-            <label for="overall-score">Overall Rating</label>
-            <div class="star-rating" id="overall-score">
-                <span class="star" data-value="1">&#9733;</span>
-                <span class="star" data-value="2">&#9733;</span>
-                <span class="star" data-value="3">&#9733;</span>
-                <span class="star" data-value="4">&#9733;</span>
-                <span class="star" data-value="5">&#9733;</span>
-            </div>
-
-            <!-- First Name -->
             <label for="first-name">Employee First Name</label>
-            <input type="text" id="first-name" placeholder="Enter First Name" required>
+            <input type="text" id="first-name" required>
 
-            <!-- Last Name -->
             <label for="last-name">Employee Last Name</label>
-            <input type="text" id="last-name" placeholder="Enter Last Name" required>
+            <input type="text" id="last-name" required>
 
-
-            <!-- Company Worked For -->
             <label for="company">Company Worked For</label>
-            <input type="text" id="company" placeholder="Enter Company Name">
+            <input type="text" id="company" required>
 
-            <!-- Employer Position -->
-            <label for="position">Employer Position</label>
-            <input type="text" id="position" placeholder="Enter Position">
-
-            <!-- Reason for Rating -->
-            <label for="reason">Reason for Rating</label>
-            <textarea id="reason" placeholder="Describe your reason for the rating"></textarea>
-
-            <!-- Tags (Skills) -->
-            <label for="tags">Rate Skills</label>
-            <div id="tags-container">
-                <div class="tag-rating">
-                    <span>Communication</span>
-                    <div class="star-rating" id="communication-rating">
-                        <span class="star" data-value="1">&#9733;</span>
-                        <span class="star" data-value="2">&#9733;</span>
-                        <span class="star" data-value="3">&#9733;</span>
-                        <span class="star" data-value="4">&#9733;</span>
-                        <span class="star" data-value="5">&#9733;</span>
-                    </div>
+            <label for="position">Employer Title</label>
+            <input type="text" id="position">
+            
+            <div class="survey-section">
+                <h2>Survey Questions</h2>
+                <div class="survey-question">
+                    <label>Reliability: How consistent does this person meet deadlines and fulfill their commitments?</label>
+                    <select required>
+                        <option value="0">Rarely Consistent</option>
+                        <option value="2.5">Somewhat Consistent</option>
+                        <option value="5">Very Consistent</option>
+                    </select>
                 </div>
-                <div class="tag-rating">
-                    <span>Teamwork</span>
-                    <div class="star-rating" id="teamwork-rating">
-                        <span class="star" data-value="1">&#9733;</span>
-                        <span class="star" data-value="2">&#9733;</span>
-                        <span class="star" data-value="3">&#9733;</span>
-                        <span class="star" data-value="4">&#9733;</span>
-                        <span class="star" data-value="5">&#9733;</span>
-                    </div>
+                <div class="survey-question">
+                    <label>Accountability: How does this person take responsibility for their actions and work outcomes?</label>
+                    <select required>
+                        <option value="0">Never</option>
+                        <option value="2.5">Sometimes</option>
+                        <option value="5">Always</option>
+                    </select>
                 </div>
-                <div class="tag-rating">
-                    <span>Technical Skills</span>
-                    <div class="star-rating" id="technical-skills-rating">
-                        <span class="star" data-value="1">&#9733;</span>
-                        <span class="star" data-value="2">&#9733;</span>
-                        <span class="star" data-value="3">&#9733;</span>
-                        <span class="star" data-value="4">&#9733;</span>
-                        <span class="star" data-value="5">&#9733;</span>
-                    </div>
+                <div class="survey-question">
+                    <label>Teamwork: How effectively does this person collaborate and communicate with team members?</label>
+                    <select required>
+                        <option value="0">Poor</option>
+                        <option value="2.5">Fair</option>
+                        <option value="5">Excellent</option>
+                    </select>
+                </div>
+                <div class="survey-question">
+                    <label>Adaptability: How well does this person adjust to changes or new challenges in the workplace?</label>
+                    <select required>
+                        <option value="0">Needs Improvement</option>
+                        <option value="2.5">Somewhat Well</option>
+                        <option value="5">Very Well</option>
+                    </select>
+                </div>
+                <div class="survey-question">
+                    <label>Problem-Solving Skills: How proficient is this person at identifying and solving work-related issues?</label>
+                    <select required>
+                        <option value="0">Needs Improvement</option>
+                        <option value="2.5">Moderately Proficient</option>
+                        <option value="5">Extremely Proficient</option>
+                    </select>
+                </div>
+                <div class="survey-question">
+                    <label>Work Quality: How would you rate the overall quality and thoroughness of this person's work?</label>
+                    <select required>
+                        <option value="0">Poor</option>
+                        <option value="2.5">Fair</option>
+                        <option value="5">Excellent</option>
+                    </select>
+                </div>
+                <div class="survey-question">
+                    <label>Work Ethic Consistency: Does this person demonstrate a strong work ethic consistently, regardless of supervision?</label>
+                    <select required>
+                        <option value="0">Never</option>
+                        <option value="2.5">Sometimes</option>
+                        <option value="5">Always</option>
+                    </select>
+                </div>
+                <div class="survey-question">
+                    <label>Time Management: How well does this person prioritize and manage their time to complete tasks efficiently?</label>
+                    <select required>
+                        <option value="0">Poor</option>
+                        <option value="2.5">Fair</option>
+                        <option value="5">Excellent</option>
+                    </select>
+                </div>
+                <div class="survey-question">
+                    <label>Professionalism: How well does this person uphold a professional attitude in the workplace?</label>
+                    <select required>
+                        <option value="0">Never</option>
+                        <option value="2.5">Sometimes</option>
+                        <option value="5">Always</option>
+                    </select>
+                </div>
+                <div class="survey-question">
+                    <label>Initiative: How often does this person take initiative to go beyond their assigned tasks or responsibilities?</label>
+                    <select required>
+                        <option value="0">Never</option>
+                        <option value="2.5">Occasionally</option>
+                        <option value="5">Frequently</option>
+                    </select>
                 </div>
             </div>
-
+            
+            <label for="staff-score">Staff Score</label>
+            <input type="text" id="staff-score" readonly>
+            
+            <label>
+                <input type="checkbox" id="terms" required>
+                By clicking the "submit" button, I acknowledge that I have read and agreed to Staff Score's site guidelines, terms of use, and privacy policies. Submitted data becomes the property of Staff Score.
+            </label>
+            
             <button type="submit">Submit Review</button>
         </form>
     </div>
