@@ -4,35 +4,62 @@ const baseUrl = window.location.hostname === 'localhost'
     : 'https://staff-score-1d60849dcb26.herokuapp.com'; // Replace with your Heroku or custom domain URL
 
 // Existing form submission handler
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.survey-question button').forEach(button => {
+        button.addEventListener('click', function() {
+            const questionDiv = this.closest('.survey-question');
+            // Remove existing selections
+            questionDiv.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+            // Add selection
+            this.classList.add('selected');
+            // Update score
+            questionDiv.dataset.score = this.dataset.value;
+            updateOverallScore();
+        });
+    });
+});
+
+function updateOverallScore() {
+    const questions = document.querySelectorAll('.survey-question');
+    let total = 0;
+    questions.forEach(question => {
+        total += parseFloat(question.dataset.score) || 0;
+    });
+    const average = (total / questions.length).toFixed(1);
+    document.getElementById('staff-score').value = average;
+}
+
+// Updated form submission handler
 document.getElementById('review-form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
-    // Get the values from the form
-    const firstName = document.getElementById('first-name').value.trim();
-    const lastName = document.getElementById('last-name').value.trim();
-    const employeeName = `${firstName} ${lastName}`; // Combine names
-    const company = document.getElementById('company').value;
-    const position = document.getElementById('position').value;
-    const reason = document.getElementById('reason').value;
+    // Collect form data
+    const formData = {
+        firstName: document.getElementById('first-name').value.trim(),
+        lastName: document.getElementById('last-name').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        position: document.getElementById('position').value.trim(),
+    };
 
-    // Get the ratings from the star elements
-    const overallRating = getStarRating('overall-score');
-    const communicationRating = getStarRating('communication-rating');
-    const teamworkRating = getStarRating('teamwork-rating');
-    const technicalSkillsRating = getStarRating('technical-skills-rating');
+    // Collect ratings in order of questions
+    const ratings = Array.from(document.querySelectorAll('.survey-question')).map(question => ({
+        score: parseFloat(question.dataset.score) || 0
+    }));
 
-    // Create the review object
-    const newReview = {
-        firstName,
-        lastName,
-        employeeName,
-        company,
-        position,
-        reason,
-        communicationRating,
-        teamworkRating,
-        technicalSkillsRating,
-        overallRating
+    // Map ratings to specific fields
+    const reviewData = {
+        ...formData,
+        employeeName: `${formData.firstName} ${formData.lastName}`,
+        reliabilityRating: ratings[0].score,
+        accountabilityRating: ratings[1].score,
+        teamworkRating: ratings[2].score,
+        adaptabilityRating: ratings[3].score,
+        problemSolvingRating: ratings[4].score,
+        workQualityRating: ratings[5].score,
+        workEthicRating: ratings[6].score,
+        timeManagementRating: ratings[7].score,
+        professionalismRating: ratings[8].score,
+        initiativeRating: ratings[9].score
     };
 
     // Send the data to the server
