@@ -69,7 +69,7 @@ document.getElementById('review-form').addEventListener('submit', async function
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(newReview),
+            body: JSON.stringify(reviewData),
         });
 
         const result = await response.json();
