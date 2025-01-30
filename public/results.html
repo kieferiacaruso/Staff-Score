@@ -75,7 +75,7 @@
                 reviewElement.innerHTML = `
                     <h2>${review.employeeName}</h2>
                     <p><strong>Company:</strong> ${review.company}</p>
-                    <p><strong>Position:</strong> ${review.position}</p>
+                    <p><strong>Employer Position:</strong> ${review.position}</p>
                     <div class="score-display">
                         <span class="numeric-score">${parseFloat(review.overallRating).toFixed(1)}/5</span>
                         <span class="star-rating1">${getStars(review.overallRating)}</span>
