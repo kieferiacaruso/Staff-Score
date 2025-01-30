@@ -5,30 +5,46 @@ const Review = require('../models/Review');
 // Route to add a new review
 router.post('/', async (req, res) => {
     try {
-        const { firstName, lastName, company, position, reason, communicationRating, teamworkRating, technicalSkillsRating, overallRating } = req.body;
-        // Check for missing fields
-        if (!firstName || !lastName || !company || !position || !reason || !communicationRating || !teamworkRating || !technicalSkillsRating || !overallRating) {
-            return res.status(400).json({ error: 'All fields are required' });
+        const { firstName, lastName, employeeName, company, position,
+                reliabilityRating, accountabilityRating, teamworkRating,
+                adaptabilityRating, problemSolvingRating, workQualityRating,
+                workEthicRating, timeManagementRating, professionalismRating,
+                initiativeRating } = req.body;
+
+        // Validate required fields
+        if (!firstName || !lastName || !company || !position) {
+            return res.status(400).json({ error: 'Missing required fields' });
         }
 
-        // Combine firstName and lastName for storage (optional)
-        const employeeName = `${firstName} ${lastName}`;
+        // Calculate overall rating
+        const ratings = [
+            teamworkRating, reliabilityRating, accountabilityRating,
+            adaptabilityRating, problemSolvingRating, workQualityRating,
+            workEthicRating, timeManagementRating, professionalismRating,
+            initiativeRating
+        ];
+        const overallRating = (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1);
 
-        // Create a new review document
+        // Create and save review
         const newReview = new Review({
             firstName,
             lastName,
             employeeName,
             company,
             position,
-            reason,
-            communicationRating,
             teamworkRating,
-            technicalSkillsRating,
+            reliabilityRating,
+            accountabilityRating,
+            adaptabilityRating,
+            problemSolvingRating,
+            workQualityRating,
+            workEthicRating,
+            timeManagementRating,
+            professionalismRating,
+            initiativeRating,
             overallRating
         });
 
-        // Save the review to the database
         await newReview.save();
         res.status(201).json({ message: 'Review added successfully', review: newReview });
     } catch (error) {
