@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Add custom styling for the score display */
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .numeric-score {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #0d4561;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -17,42 +31,38 @@
 
     <script>
         // Get reviews from localStorage
-    const reviews = JSON.parse(localStorage.getItem('reviews'));
+        const reviews = JSON.parse(localStorage.getItem('reviews'));
 
         // Function to render stars for a given rating
-    function getStars(rating) {
-        let stars = '';
-        // Make sure the rating is a valid number
-        const numericRating = parseInt(rating, 10);
-        for (let i = 1; i <= 5; i++) {
-            if (i <= numericRating) {
-                stars += '<span class="star1">&#9733;</span>';  // Filled star
-            } else {
-                stars += '<span class="star1 star-empty1">&#9733;</span>';  // Empty star
+        function getStars(rating) {
+            let stars = '';
+            const numericRating = Math.round(parseFloat(rating)); // Handle decimal ratings
+            for (let i = 1; i <= 5; i++) {
+                stars += i <= numericRating 
+                    ? '<span class="star1">&#9733;</span>' 
+                    : '<span class="star1 star-empty1">&#9733;</span>';
             }
+            return stars;
         }
-        return stars;
-    }
 
-    if (reviews && reviews.length > 0) {
-        const container = document.getElementById('reviews-container');
-        reviews.forEach(review => {
-            const reviewElement = document.createElement('div');
-            reviewElement.classList.add('review');
-            reviewElement.innerHTML = `
-                <h2>${review.company}</h2>
-                <p><strong>Name:</strong> ${review.employeeName}</p>
-                <p><strong>Position:</strong> ${review.position}</p>
-                <p><strong>Reason:</strong> ${review.reason}</p>
-                <p><strong>Communication Rating:</strong> <span class="star-rating1">${getStars(review.communicationRating)}</span></p>
-                <p><strong>Teamwork Rating:</strong> <span class="star-rating1">${getStars(review.teamworkRating)}</span></p>
-                <p><strong>Technical Skills Rating:</strong> <span class="star-rating1">${getStars(review.technicalSkillsRating)}</span></p>
-                <p><strong>Overall Rating:</strong> <span class="star-rating1">${getStars(review.overallRating)}</span></p>
-            `;
-            container.appendChild(reviewElement);
-        });
+        if (reviews && reviews.length > 0) {
+            const container = document.getElementById('reviews-container');
+            reviews.forEach(review => {
+                const reviewElement = document.createElement('div');
+                reviewElement.classList.add('review');
+                reviewElement.innerHTML = `
+                    <h2>${review.employeeName}</h2>
+                    <p><strong>Company:</strong> ${review.company}</p>
+                    <p><strong>Position:</strong> ${review.position}</p>
+                    <div class="score-display">
+                        <span class="numeric-score">${parseFloat(review.overallRating).toFixed(1)}/5</span>
+                        <span class="star-rating1">${getStars(review.overallRating)}</span>
+                    </div>
+                `;
+                container.appendChild(reviewElement);
+            });
         } else {
-            document.body.innerHTML = '<p>No reviews found.</p>';
+            document.getElementById('reviews-container').innerHTML = '<p>No reviews found for this search.</p>';
         }
     </script>
 </body>
