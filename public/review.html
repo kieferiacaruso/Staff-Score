@@ -37,12 +37,27 @@
             white-space: nowrap;
         }
 
+        /* Smaller and disabled Staff Score input */
         #staff-score {
             margin-top: 20px;
-            font-size: 1.2em;
-            padding: 10px;
+            font-size: 1em;
+            padding: 8px;
             width: 100%;
             box-sizing: border-box;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            pointer-events: none; /* Disable clicks */
+        }
+
+        /* Add space between the first/last name and company/position fields */
+        .input-group + .input-group {
+            margin-top: 20px;
+        }
+
+        /* Position terms checkbox below the text */
+        .terms-label {
+            display: block;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -168,7 +183,7 @@
             <label for="staff-score">Staff Score</label>
             <input type="text" id="staff-score" readonly>
             
-            <label>
+            <label class="terms-label">
                 <input type="checkbox" id="terms" required>
                 By clicking the "submit" button, I acknowledge that I have read and agreed to Staff Score's site guidelines, terms of use, and privacy policies. Submitted data becomes the property of Staff Score.
             </label>
@@ -179,4 +194,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
