@@ -122,7 +122,7 @@ document.querySelectorAll('.star-rating').forEach(ratingContainer => {
 });
 
 function searchByCompany() {
-    const companyName = document.getElementById('company').value.trim();
+    const companyName = document.getElementById('company').value.trim().toLowerCase();
     if (!companyName) {
         alert('Please enter a company name.');
         return;
@@ -155,8 +155,8 @@ function searchByCompany() {
 }
 
 function searchByName() {
-    const firstName = document.getElementById('first-name').value.trim();
-    const lastName = document.getElementById('last-name').value.trim();
+    const firstName = document.getElementById('first-name').value.trim().toLowerCase();
+    const lastName = document.getElementById('last-name').value.trim().toLowerCase();
 
     if (!firstName && !lastName) {
         alert('Please enter at least a first or last name.');
