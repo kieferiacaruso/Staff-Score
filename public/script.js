@@ -1,7 +1,7 @@
 // Define the base URL for API requests
 const baseUrl = window.location.hostname === 'localhost'
     ? 'http://localhost:3000'
-    : 'https://staff-score-1d60849dcb26.herokuapp.com'; // Replace with your Heroku or custom domain URL
+    : 'https://www.staff-score.com'; // Replace with your Heroku or custom domain URL
 
 // Existing form submission handler
 document.addEventListener('DOMContentLoaded', () => {
