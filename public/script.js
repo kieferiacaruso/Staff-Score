@@ -77,6 +77,8 @@ document.getElementById('review-form').addEventListener('submit', async function
 
         if (response.ok) {
             alert('Review submitted successfully!');
+            // Redirect to thank-you.html
+            window.location.href = 'thank-you.html';
         } else {
             alert('Failed to submit review: ' + result.error);
         }
