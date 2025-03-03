@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Add these lines for Google Sign-In -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com">
 </head>
 <body>
+    <!-- Your existing header and content -->
     <header>
         <span class="logo" onclick="window.location.href='index.html'">Staff Score</span>
         <div class="header-center">
@@ -24,8 +28,11 @@
             <button onclick="window.location.href='employee-login.html'">Employee</button>
             <button onclick="window.location.href='company-login.html'">Company</button>
         </div>
+        <!-- Add the Google Sign-In button here -->
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </div>
 
+    <!-- Your existing script.js reference -->
     <script src="script.js"></script>
 </body>
 </html>
