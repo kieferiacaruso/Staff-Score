@@ -1,36 +1,35 @@
-const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client('792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com');
+const express = require('express');
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const router = express.Router();
 
-// Google Sign-In Route
-router.post('/google', async (req, res) => {
-    const { idToken } = req.body;
-
-    try {
-        const ticket = await client.verifyIdToken({
-            idToken,
-            audience: '792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com',
-        });
-        const payload = ticket.getPayload();
-        const { email, given_name, family_name } = payload;
-
-        // Check if the user already exists
-        let user = await User.findOne({ email });
-        if (!user) {
-            // Create a new user if they don't exist
-            user = new User({
-                firstName: given_name,
-                lastName: family_name,
-                email,
-                password: 'google', // You can set a dummy password or handle it differently
-                role: 'employee', // Default role, adjust as needed
-            });
-            await user.save();
-        }
-
-        // Generate a JWT token
-        const token = jwt.sign({ id: user._id }, 'secretkey', { expiresIn: '1h' });
-        res.json({ token });
-    } catch (err) {
-        res.status(500).json({ error: 'Error during Google Sign-In' });
-    }
+// Signup Route
+router.post('/signup', async (req, res) => {
+  const { firstName, lastName, email, password, role } = req.body;
+  try {
+    const user = new User({ firstName, lastName, email, password, role });
+    await user.save();
+    const token = jwt.sign({ id: user._id }, 'secretkey', { expiresIn: '1h' });
+    res.status(201).json({ message: 'User created', token });
+  } catch (err) {
+    res.status(500).json({ error: 'Error creating user' });
+  }
 });
+
+// Login Route
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ error: 'Invalid credentials' });
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
+
+    const token = jwt.sign({ id: user._id }, 'secretkey', { expiresIn: '1h' });
+    res.json({ message: 'Login successful', token });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+module.exports = router;
