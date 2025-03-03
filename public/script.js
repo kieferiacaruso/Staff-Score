@@ -194,54 +194,66 @@ function searchByName() {
             alert('No reviews found or an error occurred.');
         });
 }
-// Google Sign-In callback function
 function onSignIn(googleUser) {
-    // Get the ID token from the Google user
-    const idToken = googleUser.getAuthResponse().id_token;
-    
-    // Determine user type based on the page they're logging in from
-    const isCompanyLogin = window.location.href.includes('company-login.html');
-    const userType = isCompanyLogin ? 'company' : 'employee';
-    
-    console.log(`Sending ID token to server for ${userType} verification`);
-    
-    // Send the ID token and user type to your backend
-    fetch(`${baseUrl}/api/auth/google`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-            idToken,
-            userType 
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log("User authenticated:", data);
-            // Store user session
-            localStorage.setItem("user", JSON.stringify(data.user));
-            
-            // If this is a new user, we might want to collect additional information
-            if (!data.user.companyName && userType === 'company') {
-                // Redirect to a profile completion page for companies
-                window.location.href = "complete-company-profile.html";
-            } else if (!data.user.position && userType === 'employee') {
-                // Redirect to a profile completion page for employees
-                window.location.href = "complete-employee-profile.html";
-            } else {
-                // Redirect to the appropriate dashboard
-                window.location.href = isCompanyLogin ? "company-dashboard.html" : "employee-dashboard.html";
+    try {
+        var profile = googleUser.getBasicProfile();
+        var idToken = googleUser.getAuthResponse().id_token;
+
+        console.log("Sign-in successful, processing user data");
+        
+        // Prepare profile data
+        const profileData = {
+            id: profile.getId(),
+            name: profile.getName(),
+            email: profile.getEmail(),
+            imageUrl: profile.getImageUrl(),
+            idToken: idToken
+        };
+        
+        // Send token and profile data to your backend
+        fetch(`${baseUrl}/api/auth/google-token`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                idToken: idToken,
+                profile: profileData
+            }),
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
             }
-        } else {
-            alert("Authentication failed: " + (data.message || "Unknown error"));
-        }
-    })
-    .catch(error => {
-        console.error("Error during authentication:", error);
-        alert("An error occurred during login.");
-    });
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log("User authenticated successfully");
+                // Store user session
+                localStorage.setItem("user", JSON.stringify(data.user));
+                
+                // Redirect based on the current page
+                const currentPage = window.location.pathname;
+                if (currentPage.includes('company')) {
+                    window.location.href = "company-dashboard.html";
+                } else {
+                    window.location.href = "employee-dashboard.html";
+                }
+            } else {
+                console.error("Authentication failed:", data.message);
+                alert("Login failed: " + (data.message || "Unknown error"));
+            }
+        })
+        .catch(error => {
+            console.error("Error during authentication:", error);
+            alert("An error occurred during login. Please try again later.");
+        });
+    } catch (e) {
+        console.error("Error in onSignIn function:", e);
+        alert("There was a problem with Google Sign-In. Please try again.");
+    }
 }
 
 

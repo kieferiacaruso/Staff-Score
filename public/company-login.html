@@ -12,9 +12,15 @@
         /* Center the Google Sign-In button */
         .form-container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 50vh; /* Adjust as needed */
+        }
+        
+        .login-options {
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
@@ -31,13 +37,24 @@
     </header>
 
     <div class="container">
-        <h1>Company</h1>
+        <h1>Company Login</h1>
         <div class="form-container">
             <!-- Google Sign-In button -->
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+            
+            <div class="login-options">
+                <p>- OR -</p>
+                <a href="/api/auth/google" class="btn-google-redirect">Sign in with Google</a>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Make sure the base URL is correctly set for this environment
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Current base URL:", baseUrl);
+        });
+    </script>
 </body>
 </html>
