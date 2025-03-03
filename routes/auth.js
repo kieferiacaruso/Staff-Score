@@ -1,72 +1,113 @@
 const express = require('express');
-const { OAuth2Client } = require('google-auth-library');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
 const router = express.Router();
 
-const CLIENT_ID = "792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com";
-const client = new OAuth2Client(CLIENT_ID);
+// Google OAuth client ID and secret (preferably from environment variables)
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com";
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET; // This should be in your .env file
 
-router.post('/google', async (req, res) => {
+// Set up Passport Google OAuth strategy
+passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: "/api/auth/google/callback"
+  },
+  async function(accessToken, refreshToken, profile, done) {
     try {
-        const { idToken, userType } = req.body;
-
-        // Verify the ID token
-        const ticket = await client.verifyIdToken({
-            idToken,
-            audience: CLIENT_ID
+      // Check if user already exists in your database
+      let user = await User.findOne({ googleId: profile.id });
+      
+      if (!user) {
+        // Create a new user if they don't exist
+        user = new User({
+          googleId: profile.id,
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          imageUrl: profile.photos[0].value,
+          createdAt: new Date()
         });
-
-        const payload = ticket.getPayload();
-        const { sub, name, email, picture } = payload;
-
-        // Check if the user exists in the database
-        let user = await User.findOne({ googleId: sub });
-
-        if (!user) {
-            // Create a new user if they don't exist
-            user = new User({
-                googleId: sub,
-                name,
-                email,
-                imageUrl: picture,
-                userType: userType || 'employee', // Default to employee if not specified
-                createdAt: new Date()
-            });
-            await user.save();
-        }
-
-        // Respond with user data
-        res.json({ success: true, user });
+        await user.save();
+      }
+      
+      return done(null, user);
     } catch (error) {
-        console.error('Google authentication error:', error);
-        res.status(401).json({ success: false, message: 'Invalid Google authentication' });
+      return done(error, null);
     }
+  }
+));
+
+// Serialize and deserialize user (required for session)
+passport.serializeUser((user, done) => {
+  done(null, user.id);
 });
 
-// Route to update user profile (for adding company name or position after initial signup)
-router.post('/update-profile', async (req, res) => {
-    try {
-        const { googleId, companyName, position } = req.body;
-        
-        const updateData = {};
-        if (companyName) updateData.companyName = companyName;
-        if (position) updateData.position = position;
-        
-        const user = await User.findOneAndUpdate(
-            { googleId },
-            updateData,
-            { new: true }
-        );
-        
-        if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-        
-        res.json({ success: true, user });
-    } catch (error) {
-        console.error('Profile update error:', error);
-        res.status(500).json({ success: false, message: 'Failed to update profile' });
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
+
+// Route to initiate Google OAuth flow
+router.get('/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+// Google OAuth callback route
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login.html' }),
+  function(req, res) {
+    // Successful authentication, redirect to dashboard
+    res.redirect('/dashboard.html');
+  }
+);
+
+// Handle front-end token-based authentication
+router.post('/google-token', async (req, res) => {
+  try {
+    const { idToken, profile } = req.body;
+    
+    if (!profile || !profile.id) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Profile information is required' 
+      });
     }
+    
+    // Check if user exists
+    let user = await User.findOne({ googleId: profile.id });
+    
+    if (!user) {
+      // Create new user
+      user = new User({
+        googleId: profile.id,
+        name: profile.name,
+        email: profile.email,
+        imageUrl: profile.imageUrl,
+        createdAt: new Date()
+      });
+      await user.save();
+    }
+    
+    // Return user data
+    res.json({ success: true, user });
+  } catch (error) {
+    console.error('Authentication error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Authentication failed',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// Health check endpoint
+router.get('/health', (req, res) => {
+  res.json({ status: 'Auth route is working' });
 });
 
 module.exports = router;

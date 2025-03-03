@@ -4,6 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const reviewRoutes = require('./routes/review');
 
@@ -11,8 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 3000; // Use Heroku's dynamic port or fallback to 3000
 
 // MongoDB URI
-const dbURI = 'mongodb+srv://kieferiacaruso:x5i0QTvLCcP8gPD2@staff-score.srvie.mongodb.net/?retryWrites=true&w=majority&appName=staff-score';
-//console.log('MongoDB URI:', process.env.MONGODB_URI);
+const dbURI = process.env.MONGODB_URI || 'mongodb+srv://kieferiacaruso:x5i0QTvLCcP8gPD2@staff-score.srvie.mongodb.net/?retryWrites=true&w=majority&appName=staff-score';
 
 // Mongoose Connection
 const connectToMongoDB = async () => {
@@ -48,9 +49,15 @@ mongoose.connection.on('error', (err) => {
 // Call the connection function
 connectToMongoDB();
 
+// Enable CORS
+app.use(cors());
+
 // Middleware for parsing requests
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Initialize Passport
+app.use(passport.initialize());
 
 // Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -58,6 +65,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Use Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/reviews', reviewRoutes);
+
+// Add a root route for Heroku health checks
+app.get('/', (req, res) => {
+    res.send('Staff Score API is running');
+});
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
