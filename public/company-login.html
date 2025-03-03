@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="style.css">
     <!-- Add Google Sign-In script and meta tag -->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com">
+    <style>
+        /* Center the Google Sign-In button */
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh; /* Adjust as needed */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -24,7 +33,7 @@
     <div class="container">
         <h1>Company</h1>
         <div class="form-container">
-            <!-- Replace email and password fields with Google Sign-In button -->
+            <!-- Google Sign-In button -->
             <div class="g-signin2" data-onsuccess="onSignIn"></div>
         </div>
     </div>
