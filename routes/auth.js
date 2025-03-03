@@ -1,6 +1,6 @@
 const express = require('express');
 const { OAuth2Client } = require('google-auth-library');
-const User = require('../models/User'); // Your user model
+const User = require('../models/User');
 const router = express.Router();
 
 const CLIENT_ID = "792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com";
@@ -8,7 +8,7 @@ const client = new OAuth2Client(CLIENT_ID);
 
 router.post('/google', async (req, res) => {
     try {
-        const { idToken } = req.body;
+        const { idToken, userType } = req.body;
 
         // Verify the ID token
         const ticket = await client.verifyIdToken({
@@ -29,6 +29,7 @@ router.post('/google', async (req, res) => {
                 name,
                 email,
                 imageUrl: picture,
+                userType: userType || 'employee', // Default to employee if not specified
                 createdAt: new Date()
             });
             await user.save();
@@ -39,6 +40,32 @@ router.post('/google', async (req, res) => {
     } catch (error) {
         console.error('Google authentication error:', error);
         res.status(401).json({ success: false, message: 'Invalid Google authentication' });
+    }
+});
+
+// Route to update user profile (for adding company name or position after initial signup)
+router.post('/update-profile', async (req, res) => {
+    try {
+        const { googleId, companyName, position } = req.body;
+        
+        const updateData = {};
+        if (companyName) updateData.companyName = companyName;
+        if (position) updateData.position = position;
+        
+        const user = await User.findOneAndUpdate(
+            { googleId },
+            updateData,
+            { new: true }
+        );
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        
+        res.json({ success: true, user });
+    } catch (error) {
+        console.error('Profile update error:', error);
+        res.status(500).json({ success: false, message: 'Failed to update profile' });
     }
 });
 
