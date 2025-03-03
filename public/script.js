@@ -195,42 +195,48 @@ function searchByName() {
         });
 }
 // Google Sign-In callback function
+// Google Sign-In callback function
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-
-    // Get the ID token to send to your backend for verification
     var idToken = googleUser.getAuthResponse().id_token;
-    console.log('ID Token: ' + idToken);
 
-    // Example: Send the ID token to your backend for verification
+    // Prepare user data
+    const userData = {
+        googleId: profile.getId(),
+        name: profile.getName(),
+        email: profile.getEmail(),
+        profileImage: profile.getImageUrl(),
+        idToken: idToken, // Send ID token for verification
+    };
+
+    console.log("Sending user data:", userData);
+
+    // Send user data to the backend
     fetch(`${baseUrl}/api/auth/google`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ idToken }),
+        body: JSON.stringify(userData),
     })
     .then(response => response.json())
     .then(data => {
-        if (data.token) {
-            // Store the token in localStorage or sessionStorage
-            localStorage.setItem('token', data.token);
-            alert('Login successful!');
-            // Redirect to the desired page
-            window.location.href = 'index.html';
+        if (data.success) {
+            console.log("User authenticated:", data);
+            alert("Login successful!");
+            // Store user session (if needed)
+            localStorage.setItem("user", JSON.stringify(data.user));
+            window.location.href = "dashboard.html"; // Redirect after login
         } else {
-            alert('Login failed: ' + data.error);
+            alert("Authentication failed: " + data.error);
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred during login.');
+        console.error("Error during authentication:", error);
+        alert("An error occurred during login.");
     });
 }
+
 
 // Sign-out function
 function signOut() {
