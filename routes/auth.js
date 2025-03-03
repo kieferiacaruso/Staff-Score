@@ -1,35 +1,45 @@
 const express = require('express');
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+const User = require('../models/User'); // Your user model
 const router = express.Router();
 
-// Signup Route
-router.post('/signup', async (req, res) => {
-  const { firstName, lastName, email, password, role } = req.body;
-  try {
-    const user = new User({ firstName, lastName, email, password, role });
-    await user.save();
-    const token = jwt.sign({ id: user._id }, 'secretkey', { expiresIn: '1h' });
-    res.status(201).json({ message: 'User created', token });
-  } catch (err) {
-    res.status(500).json({ error: 'Error creating user' });
-  }
-});
+const CLIENT_ID = "792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com";
+const client = new OAuth2Client(CLIENT_ID);
 
-// Login Route
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: 'Invalid credentials' });
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
+router.post('/google', async (req, res) => {
+    try {
+        const { idToken } = req.body;
 
-    const token = jwt.sign({ id: user._id }, 'secretkey', { expiresIn: '1h' });
-    res.json({ message: 'Login successful', token });
-  } catch (err) {
-    res.status(500).json({ error: 'Server error' });
-  }
+        // Verify the ID token
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: CLIENT_ID
+        });
+
+        const payload = ticket.getPayload();
+        const { sub, name, email, picture } = payload;
+
+        // Check if the user exists in the database
+        let user = await User.findOne({ googleId: sub });
+
+        if (!user) {
+            // Create a new user if they don't exist
+            user = new User({
+                googleId: sub,
+                name,
+                email,
+                imageUrl: picture,
+                createdAt: new Date()
+            });
+            await user.save();
+        }
+
+        // Respond with user data
+        res.json({ success: true, user });
+    } catch (error) {
+        console.error('Google authentication error:', error);
+        res.status(401).json({ success: false, message: 'Invalid Google authentication' });
+    }
 });
 
 module.exports = router;
