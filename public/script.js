@@ -195,40 +195,47 @@ function searchByName() {
         });
 }
 // Google Sign-In callback function
-// Google Sign-In callback function
 function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    var idToken = googleUser.getAuthResponse().id_token;
-
-    // Prepare user data
-    const userData = {
-        googleId: profile.getId(),
-        name: profile.getName(),
-        email: profile.getEmail(),
-        profileImage: profile.getImageUrl(),
-        idToken: idToken, // Send ID token for verification
-    };
-
-    console.log("Sending user data:", userData);
-
-    // Send user data to the backend
+    // Get the ID token from the Google user
+    const idToken = googleUser.getAuthResponse().id_token;
+    
+    // Determine user type based on the page they're logging in from
+    const isCompanyLogin = window.location.href.includes('company-login.html');
+    const userType = isCompanyLogin ? 'company' : 'employee';
+    
+    console.log(`Sending ID token to server for ${userType} verification`);
+    
+    // Send the ID token and user type to your backend
     fetch(`${baseUrl}/api/auth/google`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({ 
+            idToken,
+            userType 
+        }),
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             console.log("User authenticated:", data);
-            alert("Login successful!");
-            // Store user session (if needed)
+            // Store user session
             localStorage.setItem("user", JSON.stringify(data.user));
-            window.location.href = "dashboard.html"; // Redirect after login
+            
+            // If this is a new user, we might want to collect additional information
+            if (!data.user.companyName && userType === 'company') {
+                // Redirect to a profile completion page for companies
+                window.location.href = "complete-company-profile.html";
+            } else if (!data.user.position && userType === 'employee') {
+                // Redirect to a profile completion page for employees
+                window.location.href = "complete-employee-profile.html";
+            } else {
+                // Redirect to the appropriate dashboard
+                window.location.href = isCompanyLogin ? "company-dashboard.html" : "employee-dashboard.html";
+            }
         } else {
-            alert("Authentication failed: " + data.error);
+            alert("Authentication failed: " + (data.message || "Unknown error"));
         }
     })
     .catch(error => {

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="792540988133-r0q5pr8m9icqu2lhefgvbntvu3oabug7.apps.googleusercontent.com">
+</head>
+<body>
+    <header>
+        <span class="logo" onclick="window.location.href='index.html'">Staff Score</span>
+        <div class="header-center">
+            <button onclick="window.location.href='review.html'">Write a Review</button>
+        </div>
+        <div class="header-right">
+            <button onclick="signOut()">Sign Out</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Employee Dashboard</h1>
+        <div class="profile-section">
+            <img id="profile-image" src="" alt="Profile Image">
+            <h2 id="user-name"></h2>
+            <p id="user-email"></p>
+        </div>
+        
+        <div class="dashboard-content">
+            <h2>Your Reviews</h2>
+            <div id="reviews-list">
+                <!-- Reviews will be dynamically loaded here -->
+                <p>No reviews found.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Display user information from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(localStorage.getItem('user'));
+            if (userData) {
+                document.getElementById('user-name').textContent = userData.name;
+                document.getElementById('user-email').textContent = userData.email;
+                document.getElementById('profile-image').src = userData.imageUrl || 'default-avatar.png';
+                
+                // Here you would add code to fetch and display this user's reviews
+                // fetchUserReviews(userData.googleId);
+            } else {
+                // Redirect to login if no user data is found
+                window.location.href = 'employee-login.html';
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
