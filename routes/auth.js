@@ -20,12 +20,13 @@ passport.use(new GoogleStrategy({
       let user = await User.findOne({ googleId: profile.id });
       
       if (!user) {
-        // Create a new user if they don't exist
+        // Create a new user if they don't exist - Default to employee type
         user = new User({
           googleId: profile.id,
           name: profile.displayName,
           email: profile.emails[0].value,
           imageUrl: profile.photos[0].value,
+          userType: 'employee', // Default user type
           createdAt: new Date()
         });
         await user.save();
@@ -82,12 +83,13 @@ router.post('/google-token', async (req, res) => {
     let user = await User.findOne({ googleId: profile.id });
     
     if (!user) {
-      // Create new user
+      // Create new user with the userType from the request
       user = new User({
         googleId: profile.id,
         name: profile.name,
         email: profile.email,
         imageUrl: profile.imageUrl,
+        userType: profile.userType || 'employee', // Use provided userType or default to 'employee'
         createdAt: new Date()
       });
       await user.save();
@@ -100,6 +102,49 @@ router.post('/google-token', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Authentication failed',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// Add endpoint to update user profile information
+router.put('/user-profile', async (req, res) => {
+  try {
+    const { googleId, userType, companyName, position } = req.body;
+    
+    if (!googleId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Google ID is required'
+      });
+    }
+    
+    // Find and update the user
+    const user = await User.findOne({ googleId });
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+    
+    // Update fields if provided
+    if (userType) user.userType = userType;
+    if (companyName) user.companyName = companyName;
+    if (position) user.position = position;
+    
+    await user.save();
+    
+    res.json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update profile',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
