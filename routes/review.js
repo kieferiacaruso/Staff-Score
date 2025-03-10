@@ -99,10 +99,23 @@ router.get('/reviews/name', async (req, res) => {
         }
 
         const query = {};
-        if (firstName) query.$or = [{ firstName }, { lastName: firstName }];
-        if (lastName) query.$or = query.$or 
-            ? query.$or.concat([{ lastName }, { firstName: lastName }]) 
-            : [{ lastName }, { firstName: lastName }];
+        if (firstName) {
+            query.$or = [
+                { firstName: { $regex: new RegExp(firstName, 'i') } },
+                { lastName: { $regex: new RegExp(firstName, 'i') } }
+            ];
+        }
+        if (lastName) {
+            query.$or = query.$or 
+                ? query.$or.concat([
+                    { lastName: { $regex: new RegExp(lastName, 'i') } },
+                    { firstName: { $regex: new RegExp(lastName, 'i') } }
+                ]) 
+                : [
+                    { lastName: { $regex: new RegExp(lastName, 'i') } },
+                    { firstName: { $regex: new RegExp(lastName, 'i') } }
+                ];
+        }
 
         const reviews = await Review.find(query);
 
@@ -114,17 +127,25 @@ router.get('/reviews/name', async (req, res) => {
 
         // Custom sorting logic
         const sortedReviews = reviews.sort((a, b) => {
-            const bothMatchA = a.firstName === firstName && a.lastName === lastName;
-            const bothMatchB = b.firstName === firstName && b.lastName === lastName;
+            const firstNameLower = firstName ? firstName.toLowerCase() : null;
+            const lastNameLower = lastName ? lastName.toLowerCase() : null;
 
-            const firstNameMatchA = a.firstName === firstName;
-            const firstNameMatchB = b.firstName === firstName;
+            const aFirstNameLower = a.firstName.toLowerCase();
+            const aLastNameLower = a.lastName.toLowerCase();
+            const bFirstNameLower = b.firstName.toLowerCase();
+            const bLastNameLower = b.lastName.toLowerCase();
 
-            const lastNameMatchA = a.lastName === lastName;
-            const lastNameMatchB = b.lastName === lastName;
+            const bothMatchA = aFirstNameLower === firstNameLower && aLastNameLower === lastNameLower;
+            const bothMatchB = bFirstNameLower === firstNameLower && bLastNameLower === lastNameLower;
 
-            const reversedMatchA = a.firstName === lastName || a.lastName === firstName;
-            const reversedMatchB = b.firstName === lastName || b.lastName === firstName;
+            const firstNameMatchA = aFirstNameLower === firstNameLower;
+            const firstNameMatchB = bFirstNameLower === firstNameLower;
+
+            const lastNameMatchA = aLastNameLower === lastNameLower;
+            const lastNameMatchB = bLastNameLower === lastNameLower;
+
+            const reversedMatchA = aFirstNameLower === lastNameLower || aLastNameLower === firstNameLower;
+            const reversedMatchB = bFirstNameLower === lastNameLower || bLastNameLower === firstNameLower;
 
             // Sorting priority:
             // 1. Reviews with both first and last name matching
