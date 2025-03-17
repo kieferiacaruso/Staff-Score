@@ -41,59 +41,130 @@ function updateHeaderForLoggedInUser(user) {
         // Add user info and dropdown
         const userDiv = document.createElement('div');
         userDiv.className = 'user-profile';
+        
+        // Create profile element with user info and dropdown menu
         userDiv.innerHTML = `
-            <span class="user-name">${user.name}</span>
-            <img src="${user.imageUrl || '/images/default-avatar.png'}" alt="Profile" class="user-avatar">
+            <div class="profile-container">
+                <img src="${user.imageUrl || '/images/default-avatar.png'}" alt="Profile" class="user-avatar">
+                <span class="user-name">${user.name}</span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
             <div class="user-dropdown">
                 <a href="${user.userType === 'company' ? 'company-dashboard.html' : 'employee-dashboard.html'}">Dashboard</a>
+                <a href="profile.html">My Profile</a>
                 <a href="#" onclick="signOut(); return false;">Sign Out</a>
             </div>
         `;
+        
         headerRight.appendChild(userDiv);
         
         // Add CSS for the user profile section
-        const style = document.createElement('style');
-        style.textContent = `
-            .user-profile {
-                display: flex;
-                align-items: center;
-                position: relative;
-                cursor: pointer;
+        if (!document.getElementById('user-profile-styles')) {
+            const style = document.createElement('style');
+            style.id = 'user-profile-styles';
+            style.textContent = `
+                .user-profile {
+                    position: relative;
+                    cursor: pointer;
+                }
+                
+                .profile-container {
+                    display: flex;
+                    align-items: center;
+                    background-color: #f5f5f5;
+                    border-radius: 20px;
+                    padding: 4px 12px 4px 4px;
+                    transition: background-color 0.2s;
+                }
+                
+                .profile-container:hover {
+                    background-color: #e8e8e8;
+                }
+                
+                .user-name {
+                    margin: 0 8px;
+                    font-weight: 500;
+                }
+                
+                .dropdown-arrow {
+                    font-size: 10px;
+                    color: #666;
+                }
+                
+                .user-avatar {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    border: 2px solid #fff;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                }
+                
+                .user-dropdown {
+                    display: none;
+                    position: absolute;
+                    top: calc(100% + 5px);
+                    right: 0;
+                    background: white;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 100;
+                    min-width: 180px;
+                    overflow: hidden;
+                }
+                
+                .user-dropdown a {
+                    display: block;
+                    padding: 12px 16px;
+                    text-decoration: none;
+                    color: #333;
+                    transition: background 0.2s;
+                    border-bottom: 1px solid #eee;
+                }
+                
+                .user-dropdown a:last-child {
+                    border-bottom: none;
+                }
+                
+                .user-dropdown a:hover {
+                    background: #f7f7f7;
+                }
+                
+                .user-profile:hover .user-dropdown {
+                    display: block;
+                    animation: fadeIn 0.2s ease-out;
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Add click event to toggle dropdown on mobile
+        userDiv.addEventListener('click', function(e) {
+            if (window.innerWidth < 768) {
+                const dropdown = this.querySelector('.user-dropdown');
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                } else {
+                    dropdown.style.display = 'block';
+                }
+                e.stopPropagation();
             }
-            .user-name {
-                margin-right: 10px;
+        });
+        
+        // Close dropdown when clicking elsewhere on mobile
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 768) {
+                if (!userDiv.contains(e.target)) {
+                    userDiv.querySelector('.user-dropdown').style.display = 'none';
+                }
             }
-            .user-avatar {
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-            }
-            .user-dropdown {
-                display: none;
-                position: absolute;
-                top: 100%;
-                right: 0;
-                background: white;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                z-index: 100;
-                min-width: 150px;
-            }
-            .user-dropdown a {
-                display: block;
-                padding: 10px 15px;
-                text-decoration: none;
-                color: #333;
-            }
-            .user-dropdown a:hover {
-                background: #f5f5f5;
-            }
-            .user-profile:hover .user-dropdown {
-                display: block;
-            }
-        `;
-        document.head.appendChild(style);
+        });
     }
 }
 
@@ -256,6 +327,8 @@ function searchByName() {
 // Google Sign-In callback function
 function onSignIn(googleUser) {
     try {
+        console.log("Sign-in function triggered"); // Debug log
+        
         var profile = googleUser.getBasicProfile();
         var idToken = googleUser.getAuthResponse().id_token;
 
@@ -275,6 +348,8 @@ function onSignIn(googleUser) {
             userType: userType // Add the userType field required by your model
         };
         
+        console.log("Sending authentication request to server");
+        
         // Send token and profile data to your backend
         fetch(`${baseUrl}/api/auth/google-token`, {
             method: 'POST',
@@ -288,6 +363,7 @@ function onSignIn(googleUser) {
             credentials: 'same-origin'
         })
         .then(response => {
+            console.log("Server response received:", response.status);
             if (!response.ok) {
                 throw new Error(`Server responded with status: ${response.status}`);
             }
