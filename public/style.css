@@ -1,10 +1,18 @@
 /* General Styles */
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f9;
     color: #333;
+    line-height: 1.6;
 }
 
 /* Improved Header Styles */
@@ -16,6 +24,9 @@ header {
     background: linear-gradient(135deg, #146490, #0d4561);
     color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo {
@@ -33,6 +44,11 @@ header {
     opacity: 0.9;
 }
 
+.header-center, .header-right {
+    display: flex;
+    gap: 1rem;
+}
+
 /* Improved Container Styles */
 .container {
     max-width: 600px;
@@ -40,7 +56,7 @@ header {
     padding: 40px;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     text-align: center;
 }
 
@@ -100,6 +116,7 @@ button {
     font-size: 1.1rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .button-container button:hover {
@@ -108,20 +125,27 @@ button {
     background: linear-gradient(135deg, #1a7fb4, #146490);
 }
 
-/* Original Unmodified Styles Below */
+/* Form Elements Styles */
 label {
     display: block;
     margin-top: 20px;
     font-weight: bold;
 }
 
-input, textarea, button {
+input, textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #146490;
+    box-shadow: 0 0 0 3px rgba(20, 100, 144, 0.1);
 }
 
 textarea {
@@ -129,9 +153,12 @@ textarea {
     height: 100px;
 }
 
+/* Star Rating Styles */
 .star-rating {
     display: flex;
     gap: 5px;
+    justify-content: center;
+    margin: 15px 0;
 }
 
 .star {
@@ -149,17 +176,26 @@ textarea {
     margin-top: 15px;
 }
 
+/* Review Card Styles */
 .review {
     border: 1px solid #ddd;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 5px;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 10px;
     background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+}
+
+.review:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .review h3 {
     margin: 0 0 10px;
     font-size: 1.2em;
+    color: #0d4561;
 }
 
 .review p {
@@ -184,27 +220,7 @@ textarea {
     margin-right: 5px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    header {
-        padding: 15px 20px;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    
-    .header-center, .header-right {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .button-container {
-        flex-direction: column;
-    }
-    
-    .button-container button {
-        max-width: none;
-    }
-}
+/* Survey Button Styles */
 .survey-question button {
     transition: all 0.3s ease;
     background-color: #f4f4f4;
@@ -221,5 +237,41 @@ textarea {
     font-size: 1.2em;
     font-weight: bold;
     padding: 10px;
+    margin-top: 20px;
     text-align: center;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+    border-left: 4px solid #146490;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .header-center, .header-right {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .container {
+        margin: 30px 15px;
+        padding: 25px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 25px;
+    }
+    
+    .button-container {
+        flex-direction: column;
+    }
+    
+    .button-container button {
+        max-width: none;
+    }
 }
