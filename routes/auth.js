@@ -8,29 +8,38 @@ const SECRET = process.env.JWT_SECRET || "secret";
 
 // Sign Up
 router.post('/signup', async (req, res) => {
-    const { firstName, lastName, email, password, role } = req.body;
-    try {
-        let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ error: 'User already exists' });
+  const { firstName, lastName, email, password, role } = req.body;
+  try {
+      // Log the request payload for debugging (remove in production)
+      console.log('Signup request:', { firstName, lastName, email, role });
+      
+      let user = await User.findOne({ email });
+      if (user) return res.status(400).json({ error: 'User already exists' });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-        user = new User({
-            name: `${firstName} ${lastName}`,
-            email,
-            password: hashedPassword,
-            userType: role
-        });
+      user = new User({
+          name: `${firstName} ${lastName}`,
+          email,
+          password: hashedPassword,
+          userType: role
+      });
 
-        await user.save();
+      await user.save();
+      console.log('User saved successfully:', user._id);
 
-        const token = jwt.sign({ id: user._id }, SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ id: user._id }, SECRET, { expiresIn: '7d' });
 
-        res.json({ token, user });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal error' });
-    }
+      res.json({ token, user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          userType: user.userType
+      }});
+  } catch (err) {
+      console.error('Signup error details:', err.message, err.stack);
+      res.status(500).json({ error: `Server error: ${err.message}` });
+  }
 });
 
 // Log In
