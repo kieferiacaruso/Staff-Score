@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const router = express.Router();
-const SECRET = process.env.JWT_SECRET || "secret"; // Should go in .env
+const SECRET = process.env.JWT_SECRET || "secret";
 
-// Signup Route
-router.post('/', async (req, res) => {
+// Sign Up
+router.post('/signup', async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body;
     try {
         let user = await User.findOne({ email });
@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Login Route
+// Log In
 router.post('/login', async (req, res) => {
     const { email, password, userType } = req.body;
     try {
