@@ -7,7 +7,7 @@ const router = express.Router();
 const SECRET = process.env.JWT_SECRET || "secret"; // Should go in .env
 
 // Signup Route
-router.post('/signup', async (req, res) => {
+router.post('/', async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body;
     try {
         let user = await User.findOne({ email });
