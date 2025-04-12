@@ -172,3 +172,51 @@ function signOut() {
     alert('You have been signed out.');
     window.location.href = 'index.html';
 }
+
+if (document.getElementById('email-signup-form')) {
+    document.getElementById('email-signup-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const firstName = document.getElementById('first-name').value.trim();
+        const lastName = document.getElementById('last-name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        
+        // Default role is 'employee' - you might want to add a selector for this
+        const role = 'employee';
+        
+        const signupData = {
+            firstName,
+            lastName,
+            email,
+            password,
+            role
+        };
+        
+        try {
+            const response = await fetch(`${baseUrl}/api/auth/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(signupData)
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Store user data in localStorage
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Redirect to dashboard based on user type
+                alert('Signup successful!');
+                window.location.href = data.user.userType === 'company' ? 'company-dashboard.html' : 'employee-dashboard.html';
+            } else {
+                alert('Signup failed: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error during signup:', error);
+            alert('An error occurred during signup: ' + error.message);
+        }
+    });
+}
