@@ -19,11 +19,12 @@ router.post('/signup', async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       user = new User({
-          name: `${firstName} ${lastName}`,
-          email,
-          password: hashedPassword,
-          userType: role
-      });
+        name: `${firstName} ${lastName}`,
+        email,
+        password: hashedPassword,
+        userType: role,
+        googleId: `local_${Date.now()}_${Math.random().toString(36).substring(2,9)}` // Random unique ID
+    });
 
       await user.save();
       console.log('User saved successfully:', user._id);
