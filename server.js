@@ -13,7 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 3000; // Use Heroku's dynamic port or fallback to 3000
 
 // MongoDB URI
-const dbURI = process.env.MONGODB_URI || 'mongodb+srv://kieferiacaruso:x5i0QTvLCcP8gPD2@staff-score.srvie.mongodb.net/?retryWrites=true&w=majority&appName=staff-score';
+const dbURI = process.env.MONGODB_URI || 'mongodb+srv://kieferiacaruso:littlejack45@staff-score.srvie.mongodb.net/?retryWrites=true&w=majority&appName=staff-score';
 
 // Mongoose Connection
 const connectToMongoDB = async () => {
