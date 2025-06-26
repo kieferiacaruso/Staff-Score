@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <span class="logo" onclick="window.location.href='index.html'">Staff Score</span>
+        <div class="header-center">
+            <button onclick="window.location.href='review.html'">Write a Review</button>
+        </div>
+        <div class="header-right">
+            <!-- Profile will be loaded here by script.js -->
+            <button onclick="window.location.href='login.html'">Log In</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>User Profile</h1>
+        <div id="profile-info" class="profile-section">
+            <!-- User information will be dynamically loaded here by script.js -->
+            <p>Loading profile information...</p>
+        </div>
+
+        <div id="edit-profile-form" class="profile-section" style="display: none;">
+            <h2>Edit Profile</h2>
+            <div class="input-group">
+                <label for="edit-name">Name:</label>
+                <input type="text" id="edit-name">
+            </div>
+            <div class="input-group">
+                <label for="edit-email">Email:</label>
+                <input type="email" id="edit-email">
+            </div>
+            <div class="input-group">
+                <label for="edit-image">Profile Image:</label>
+                <input type="file" id="edit-image" accept="image/*">
+            </div>
+            <button id="save-profile-btn">Save Changes</button>
+            <button id="cancel-edit-btn">Cancel</button>
+        </div>
+    </div>
+
+    <script src="/public/script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

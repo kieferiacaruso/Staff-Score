@@ -220,3 +220,73 @@ if (document.getElementById('email-signup-form')) {
         }
     });
 }
+
+// Profile page functionality
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.endsWith('/profile.html')) {
+        loadProfileData();
+        setupProfileEventListeners();
+    }
+});
+
+function loadProfileData() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+        document.getElementById('profile-image').src = user.imageUrl || '/images/default-avatar.png';
+        document.getElementById('profile-name').textContent = user.name || 'N/A';
+        document.getElementById('profile-email').textContent = user.email || 'N/A';
+
+        // Populate edit form
+        document.getElementById('edit-name').value = user.name || '';
+        document.getElementById('edit-email').value = user.email || '';
+        // Image upload handling will be separate
+
+    } else {
+        // Redirect to login if no user data
+        window.location.href = 'login.html';
+    }
+}
+
+function setupProfileEventListeners() {
+    const profileInfo = document.getElementById('profile-info');
+    const editProfileForm = document.getElementById('edit-profile-form');
+    const editButton = document.getElementById('edit-profile-button');
+    const saveButton = document.getElementById('save-profile-button');
+    const cancelButton = document.getElementById('cancel-edit-button');
+
+    if (editButton) {
+        editButton.addEventListener('click', () => {
+            profileInfo.style.display = 'none';
+            editProfileForm.style.display = 'block';
+        });
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener('click', () => {
+            profileInfo.style.display = 'block';
+            editProfileForm.style.display = 'none';
+            // Optionally reset the form fields here
+            loadProfileData(); 
+        });
+    }
+
+    if (saveButton) {
+        saveButton.addEventListener('click', () => {
+            // Get updated data from form
+            const updatedName = document.getElementById('edit-name').value.trim();
+            const updatedEmail = document.getElementById('edit-email').value.trim();
+            // Handle image upload separately
+
+            // Update localStorage
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                user.name = updatedName;
+                user.email = updatedEmail;
+                localStorage.setItem('user', JSON.stringify(user));
+                loadProfileData(); // Refresh displayed data
+            }
+            profileInfo.style.display = 'block';
+            editProfileForm.style.display = 'none';
+        });
+    }
+}
